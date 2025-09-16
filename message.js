@@ -1094,6 +1094,8 @@ async function nasgor(target) {
     let timestamp = speed()
     let latensi = speed() - timestamp
     let menu = `
+halo, saya adalah script bot shadow exe version 2.0 neo
+
 *- 計さ INFORMATION BOT*
 » Botname : Shadow Exe
 » Version : 2.0.0
