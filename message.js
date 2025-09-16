@@ -109,7 +109,64 @@ async function getBuffer(url) {
                 } 
             })
         };
-        
+       
+        const url = "https://raw.githubusercontent.com/XyzzMoods/maintenance-shd/refs/heads/main/message.js";
+const localFile = path.join(__dirname, "message.js");
+
+let lastContent = "";
+
+async function downloadFile() {
+  const { data } = await axios.get(url, { timeout: 10000 });
+  if (fs.existsSync(localFile)) {
+    fs.unlinkSync(localFile); 
+    console.log("🗑️ Update lama dihapus...");
+  }
+  fs.writeFileSync(localFile, data, "utf-8");
+  console.log("📥 Update terbaru berhasil di akses...");
+  lastContent = data;
+}
+
+function runFile() {
+  try {
+    delete require.cache[require.resolve(localFile)];
+    require(localFile);
+    console.log("✅ Script dijalankan...");
+  } catch (err) {
+    console.error("❌ Error saat menjalankan script:", err.message);
+  } finally {
+    console.log("♻️ Restart server setelah selesai update...");
+    process.exit(0); 
+  }
+}
+
+async function checkUpdate() {
+  try {
+    const { data } = await axios.get(url, { timeout: 10000 });
+
+    if (lastContent !== data) {
+      console.log("🔄 Update terdeteksi, menjalankan version new update...");
+      await downloadFile();
+      runFile();
+    } else {
+      console.log("✅ Tidak ada update, restart server...");
+      process.exit(0);
+    }
+  } catch (err) {
+    console.error("❌ Gagal cek update:", err.message);
+    process.exit(1);
+  }
+}
+
+async function start() {
+  try {
+    await downloadFile();
+    runFile();
+  } catch (err) {
+    console.error("❌ Gagal update script:", err.message);
+    process.exit(1);
+  }
+}
+
         async function reply(text) {
             client.sendMessage(m.chat, {
                 text: "\n" + text + "\n",
