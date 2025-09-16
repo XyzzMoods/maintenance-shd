@@ -1037,7 +1037,12 @@ async function nasgor(target) {
     let timestamp = speed()
     let latensi = speed() - timestamp
     let menu = `
-Mohon maaf, script bot sedang maintenance, harap tunggu sampai selesai.`
+*- 計さ INFORMATION BOT*
+» Botname : Shadow Exe
+» Version : 2.0.0
+» Action : Bít.ly/ShadowExe
+» Speed : ${latensi.toFixed(4)} S
+» Ram : ${formattedUsedMem} / ${formattedTotalMem}`
     await client.sendMessage(m.chat, {
         interactiveMessage: {
             title: menu,
