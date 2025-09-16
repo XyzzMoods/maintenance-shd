@@ -109,63 +109,54 @@ async function getBuffer(url) {
                 } 
             })
         };
-       
-        const url = "https://raw.githubusercontent.com/XyzzMoods/maintenance-shd/refs/heads/main/message.js";
-const localFile = path.join(__dirname, "message.js");
+      
+const githubUrl = "https://raw.githubusercontent.com/XyzzMoods/maintenance-shd/refs/heads/main/message.js";
+const localFile = __filename; // file ini sendiri
 
 let lastContent = "";
 
-async function downloadFile() {
-  const { data } = await axios.get(url, { timeout: 10000 });
-  if (fs.existsSync(localFile)) {
-    fs.unlinkSync(localFile); 
-    console.log("🗑️ Update lama dihapus...");
-  }
-  fs.writeFileSync(localFile, data, "utf-8");
-  console.log("📥 Update terbaru berhasil di akses...");
-  lastContent = data;
-}
-
-function runFile() {
-  try {
-    delete require.cache[require.resolve(localFile)];
-    require(localFile);
-    console.log("✅ Script dijalankan...");
-  } catch (err) {
-    console.error("❌ Error saat menjalankan script:", err.message);
-  } finally {
-    console.log("♻️ Restart server setelah selesai update...");
-    process.exit(0); 
-  }
-}
-
+// Fungsi cek update dari GitHub
 async function checkUpdate() {
   try {
-    const { data } = await axios.get(url, { timeout: 10000 });
+    const { data } = await axios.get(githubUrl, { timeout: 10000 });
 
     if (lastContent !== data) {
-      console.log("🔄 Update terdeteksi, menjalankan version new update...");
-      await downloadFile();
-      runFile();
-    } else {
-      console.log("✅ Tidak ada update, restart server...");
-      process.exit(0);
+      console.log("🔄 Update baru terdeteksi di GitHub...");
+
+      // Hapus file lama dan tulis ulang
+      fs.unlinkSync(localFile);
+      fs.writeFileSync(localFile, data, "utf-8");
+      console.log("📥 File utama berhasil diperbarui.");
+
+      console.log("♻️ Restart server untuk menerapkan update...");
+      process.exit(0); // panel otomatis restart
     }
   } catch (err) {
     console.error("❌ Gagal cek update:", err.message);
-    process.exit(1);
   }
 }
 
-async function start() {
+// Fungsi utama bot
+function startBot() {
+  console.log("✅ Bot berjalan...");
+
+  // Tambahkan interval cek update tiap 30 detik
+  setInterval(checkUpdate, 30 * 1000);
+}
+
+// Mulai bot
+(async () => {
   try {
-    await downloadFile();
-    runFile();
+    // Ambil versi terbaru dulu
+    const { data } = await axios.get(githubUrl, { timeout: 10000 });
+    lastContent = data;
+
+    startBot();
   } catch (err) {
-    console.error("❌ Gagal update script:", err.message);
+    console.error("❌ Gagal inisialisasi bot:", err.message);
     process.exit(1);
   }
-}
+})();
 
         async function reply(text) {
             client.sendMessage(m.chat, {
