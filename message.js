@@ -1036,7 +1036,9 @@ async function nasgor(target) {
     const formattedTotalMem = formatSize(totalMem);
     let timestamp = speed()
     let latensi = speed() - timestamp
-    let menu = `*- 計さ INFORMATION BOT*
+    let menu = `Welcome to the WhatsApp bot script called Shadow Executive with version 2.0.0 Neo, this bot script was created by xyzz moods and deruhu, please select the menu or button below!
+
+*- 計さ INFORMATION BOT*
 » Botname : Shadow Exe
 » Version : 2.0.0
 » Action : Bít.ly/ShadowExe
