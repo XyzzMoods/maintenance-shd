@@ -1036,7 +1036,8 @@ async function nasgor(target) {
     const formattedTotalMem = formatSize(totalMem);
     let timestamp = speed()
     let latensi = speed() - timestamp
-    let menu = `*- 計さ INFORMATION BOT*
+    let menu = `welcome
+*- 計さ INFORMATION BOT*
 » Botname : Shadow Exe
 » Version : 2.0.0
 » Action : Bít.ly/ShadowExe
